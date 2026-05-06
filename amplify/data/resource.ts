@@ -1,18 +1,98 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import {createQuizForAPI } from '../function/createQuizForAPI/resource'
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any user authenticated via an API key can "create", "read",
-"update", and "delete" any "Todo" records.
-=========================================================================*/
+
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.publicApiKey()]),
-});
+  Quiz : a.model({
+    quizId : a.id().required(),
+    userId : a.string(),
+    createdAt : a.datetime(),
+    largeCategory : a.string().required(),
+    smallCategory : a.string().required(),
+    question : a.string().required(),
+    choices : a.ref("Choice").required().array().required(),
+    correctCount : a.integer().required(),//正解の選択肢数
+    selectCount: a.integer().required(),//選択させる選択肢数　
+    displaySelectCount:a.boolean().required(),// ※N個選択してくださいを表示。
+    isPublic : a.boolean().required(),
+    explanationText : a.string(),
+    hintText : a.string(),
+    updateAt : a.datetime(),
+    createdBy: a.string()
+  })
+  .identifier(["quizId"])
+  .secondaryIndexes(index => [
+  index("largeCategory").sortKeys(["smallCategory"]).projection('INCLUDE',['question','createdAt','createdBy',"isPublic"])
+  ,index("userId").sortKeys(["createdAt"]).projection('INCLUDE',['question','isPublic'])
+  ])
+  .authorization((allow) => [
+    allow.publicApiKey().to(["read"]),
+    allow.ownerDefinedIn('userId').to(["create","update", "delete", "read"]),
+    allow.groups(["admin"])
+  ])
+  ,
+
+  Choice : a.customType({
+      choiceText : a.string().required(),
+      isCorrect:a.boolean().required(),
+  }),
+
+  //API経由の登録の場合のインプットタイプ
+  I_Quiz : a.customType({
+    quizId : a.id().required(),
+    userId : a.string(),
+    createdAt : a.datetime(),
+    largeCategory : a.string().required(),
+    smallCategory : a.string().required(),
+    question : a.string().required(),
+    choices : a.ref("Choice").required().array().required(),
+    correctCount : a.integer().required(),
+    selectCount: a.integer().required(),
+    displaySelectCount:a.boolean().required(),
+    isPublic : a.boolean().required(),
+    explanationText : a.string(),
+    hintText : a.string(),
+    updatedAt : a.datetime(),
+    createdBy: a.string()
+  }),
+
+  ApiKey : a.model({
+    userId : a.id().required(),
+    apiKey : a.string().required(),
+    userName: a.string().required(),
+    dissabled : a.boolean().required(),
+    expiredAt : a.datetime().required()
+  })
+  .identifier(["userId"])
+  .secondaryIndexes(index => [
+    index("apiKey").projection('INCLUDE',['userName','dissabled','expired'])
+  ])
+  .authorization(
+    (allow) => [
+      allow.ownerDefinedIn('userId').to(["create","update", "delete", "read"]),
+      allow.groups(["admin"])
+    ]
+  ),
+
+  CreateQuizForAPI: a.query().returns(a.string()).arguments({
+    apiKey:a.string().required(),
+    quiz:a.ref("I_Quiz").required()
+  })
+  .authorization(
+    (allow) => [allow.publicApiKey()]
+  ).handler(a.handler.function(createQuizForAPI))
+
+  /*
+  QuizList : a.model({
+    userId : a.id().required(),
+    groupName: a.string().required(),
+    quizzes: a.string().array(),
+    isPublic : a.boolean().required()
+  })
+    公開しているリストを作成するか。。。
+  */
+})
+
 
 export type Schema = ClientSchema<typeof schema>;
 
@@ -21,36 +101,8 @@ export const data = defineData({
   authorizationModes: {
     defaultAuthorizationMode: "apiKey",
     apiKeyAuthorizationMode: {
-      expiresInDays: 30,
+      expiresInDays: 365,//1年後に突然使えなくなるためデプロイが必要
     },
   },
+  logging:true
 });
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server 
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>

@@ -1,52 +1,30 @@
-"use client";
+import {Button} from '@mui/material'
+import { client } from "./_components/provider";
 
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
-import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
+import {logger} from '@/app/_lib/logger'
+import Link from 'next/link'
 
-Amplify.configure(outputs);
+export default async function App() {
 
-const client = generateClient<Schema>();
-
-export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }
-
-  useEffect(() => {
-    listTodos();
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
-    });
-  }
-
-  return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of this tutorial.
-        </a>
+   return (
+    <main className='m-2 p-2'>
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+   
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* ヘッダー */}
+        <div className="text-center bg-white rounded-xl shadow-sm p-6 border-t-4 border-blue-600">
+          <h1 className="text-3xl mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">クイズ作成</h1>
+          <p className="text-gray-600">ローコードでクイズを簡単に作成できます</p>
+        </div>
+        <div className="p-5">
+          <p className="text-lg text-center">会員登録してクイズを作成するか、ゲストとしてクイズに挑戦しましょう。</p>
+          <div className="flex justify-center m-6">
+            <button className="p-5 m-4 text-3xl text-white bg-blue-600 rounded hover:bg-blue-900"><Link href="/create">クイズ作成画面へ</Link></button>
+            <button className="p-4 m-4 text-2xl text-white bg-green-600 rounded hover:bg-green-900"><Link href="/categories">クイズカテゴリ一覧へ</Link></button>
+          </div>
+        </div>
       </div>
+    </div>
     </main>
   );
 }
