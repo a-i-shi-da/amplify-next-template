@@ -13,9 +13,9 @@ export type Mode = "CLIENT_CREATE" | "SERVER_CREATE" | "CLIENT_UPDATE" | "SERVER
 
 //クライアントから作成リクエストが来た時の検証スキーマ（サーバで詰める項目は不要）
 export const client_create_schema = z.object({
-    largeCategory : z.string().min(1,"必須項目です。").max(3000,"3000文字以内で入力してください。"),
+    largeCategory : z.string().min(1,"必須項目です。").max(50,"50文字以内で入力してください。"),
     smallCategory : z.string().min(1,"必須項目です。").max(50,"50文字以内で入力してください。"),
-    question :  z.string().min(1,"必須項目です。").max(50,"50文字以内で入力してください。"),
+    question :  z.string().min(1,"必須項目です。").max(3000,"3000文字以内で入力してください。"),
     choices : z.array(z.object({
         choiceText: z.string().min(1,"必須項目です。").max(1000,"1000文字以内で入力してください。"),
         isCorrect: z.boolean()
