@@ -19,8 +19,8 @@ export default async function App() {
         <div className="p-5">
           <p className="text-lg text-center">会員登録してクイズを作成するか、ゲストとしてクイズに挑戦しましょう。</p>
           <div className="flex justify-center m-6">
-            <button className="p-5 m-4 text-3xl text-white bg-blue-600 rounded hover:bg-blue-900"><Link href="/create">クイズ作成画面へ</Link></button>
-            <button className="p-4 m-4 text-2xl text-white bg-green-600 rounded hover:bg-green-900"><Link href="/categories">クイズカテゴリ一覧へ</Link></button>
+            <Link href="/create"><button className="p-5 m-4 text-3xl text-white bg-blue-600 rounded hover:bg-blue-900">クイズ作成画面へ</button></Link>
+            <Link href="/categories"><button className="p-4 m-4 text-2xl text-white bg-green-600 rounded hover:bg-green-900">クイズカテゴリ一覧へ</button></Link>
           </div>
         </div>
       </div>

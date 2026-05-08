@@ -15,7 +15,6 @@ export function Redirector({redirectTo="/"}:Props){
     },[])
     return (
         <div className="flex h-screen w-screen items-center justify-center">
-            <p className='text-lg'>リダイレクトします</p>
             <Spinner/>
         </div>
     )

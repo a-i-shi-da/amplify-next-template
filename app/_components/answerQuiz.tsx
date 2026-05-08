@@ -114,49 +114,51 @@ export function AnswerQuizForm({quiz}:Props){
 
 
     return (
-        <form 
-        onSubmit={handleSubmit(submitHandler,errorHandler)}
-        noValidate
-        >
+        <div>
+            <form 
+            onSubmit={handleSubmit(submitHandler,errorHandler)}
+            noValidate
+            >
                 <Card className="max-w-5xl mx-auto mt-6 shadow-lg">
-                <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success" hidden={getValues().answerStatus !== "ANSWER_CORRECT"}>
-                    正解！おめでとうございます！
-                </Alert>
-                <Alert icon={<CancelIcon fontSize="inherit" />} severity="error" hidden={getValues().answerStatus !== "ANSWER_INNCORRECT"}>
-                    不正解です。残念。。。
-                </Alert>
-                
-                <CardContent sx={{overflow:'auto'}}>
-                <Typography variant="body2" className="mb-4 font-bold" sx={{whiteSpace: "pre-line"}}>
-                    {quiz.question}
-                </Typography>
+                    <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success" hidden={getValues().answerStatus !== "ANSWER_CORRECT"}>
+                        正解！おめでとうございます！
+                    </Alert>
+                    <Alert icon={<CancelIcon fontSize="inherit" />} severity="error" hidden={getValues().answerStatus !== "ANSWER_INNCORRECT"}>
+                        不正解です。残念。。。
+                    </Alert>
+                    
+                    <CardContent sx={{overflow:'auto',maxHeight:'screen'}}>
+                    <Typography variant="body2" className="mb-4 font-bold" sx={{whiteSpace: "pre-line"}}>
+                        {quiz.question}
+                    </Typography>
 
-                
-                <Divider />
+                    
+                    <Divider />
 
-                    <Box className="mt-3 space-y-3">
-                        <Grid container spacing={2}>
-                            <AnswerChoice formState={formState}
-                            answer={getValues()}
-                            register={register}
-                            toggleChoiceIsCorrect={toggleChoiceIsCorrect}
-                            toggleChoiceIsCorrectRadio={toggleChoiceIsCorrectRadio}
-                            ></AnswerChoice>
-                        </Grid>
+                        <Box className="mt-3 space-y-3">
+                            <Grid container spacing={2}>
+                                <AnswerChoice formState={formState}
+                                answer={getValues()}
+                                register={register}
+                                toggleChoiceIsCorrect={toggleChoiceIsCorrect}
+                                toggleChoiceIsCorrectRadio={toggleChoiceIsCorrectRadio}
+                                ></AnswerChoice>
+                            </Grid>
+                        </Box>
+
+                    {/* 回答 */}
+                    <Box className="mt-4 text-right">
+                        <Button
+                        variant="contained"
+                        size="large"
+                        type="submit"
+                        >
+                        回答する
+                        </Button>
                     </Box>
-
-                {/* 回答 */}
-                <Box className="mt-4 text-right">
-                    <Button
-                    variant="contained"
-                    size="large"
-                    type="submit"
-                    >
-                    回答する
-                    </Button>
-                </Box>
-                </CardContent>
-            </Card>
-        </form>
+                    </CardContent>
+                </Card>
+            </form>
+        </div>
     )
 }

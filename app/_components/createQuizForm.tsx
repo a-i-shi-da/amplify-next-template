@@ -228,8 +228,12 @@ export default function CreateQuizForm(){
                                     min: 1,
                                     max: 100,
                                     step: 1,
-                                    onKeyDown:(e:any) => e.preventDefault() 
-                                },
+                                    onKeyDown:(e:any) => {
+                                            if(e.key !== 'Tab'){
+                                                e.preventDefault() 
+                                            }
+                                        }
+                                    },
                                 },
                             }}
                         />
@@ -254,7 +258,11 @@ export default function CreateQuizForm(){
                                         min: 1,
                                         max: 100,
                                         step: 1,
-                                        onKeyDown:(e:any) => e.preventDefault() 
+                                        onKeyDown:(e:any) => {
+                                            if(e.key !== 'Tab'){
+                                                e.preventDefault() 
+                                            }
+                                        }
                                     },
                                 },
                             }}
@@ -291,7 +299,11 @@ export default function CreateQuizForm(){
                                         min: 2,
                                         max: 100,
                                         step: 1,
-                                        onKeyDown:(e:any) => e.preventDefault() 
+                                        onKeyDown:(e:any) => {
+                                            if(e.key !== 'Tab'){
+                                                e.preventDefault() 
+                                            }
+                                        }
                                     },
                                 },
                             }}

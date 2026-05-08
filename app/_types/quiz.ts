@@ -103,6 +103,7 @@ export const valdateQuizInput = (obj:Object,mode:Mode) => {
 export type QuizForMyQuizzes = Pick<Quiz,'quizId'| 'createdAt' |'question'| 'isPublic'>
 export type QuizForCategories = Pick<Quiz,'quizId' | 'largeCategory' | 'smallCategory' | 'isPublic'>
 export type QuizForCatScreen = Pick<Quiz,'quizId' | 'largeCategory' | 'smallCategory' | 'question' | 'isPublic' | 'createdAt' | 'createdBy'>
+export type QuizForAllQuizzes = Pick<Quiz,'quizId'| 'userId' | 'createdBy' |'createdAt' |'question'| 'isPublic'>
 
 //export type PartialQuiz = DeepPartialNullable<Schema['Quiz']['type']>
 //export type QuizForSolve = NonNullable<Required<Schema['Quiz']['type']>>
