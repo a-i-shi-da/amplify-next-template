@@ -1,17 +1,28 @@
 services:
   app:
-    image: node:22
+    build:
+      context: .
+      dockerfile: Dockerfile
+
     container_name: app
+
     working_dir: /workspace
+
     volumes:
       - ..:/workspace:cached
       - next-cache:/workspace/.next
       - node-modules:/workspace/node_modules
+      - playwright-cache:/home/node/.cache/ms-playwright
+
     command: sleep infinity
+
     user: node
+
     ports:
       - "3000:3000"
+      - "9323:9323"
 
 volumes:
   next-cache:
   node-modules:
+  playwright-cache:

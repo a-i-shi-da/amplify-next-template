@@ -18,6 +18,7 @@ import { Button,
     Alert
   } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { Quiz } from "../_types/quiz";
@@ -27,7 +28,7 @@ import { ZodError } from 'zod';
 import AnswerChoice from '@/app/_components/answerChoice'
 
 import {useForm} from 'react-hook-form'
-import { get } from 'node:http';
+import { useState } from 'react';
 import { logger } from '../_lib/logger';
 
 type Props={
@@ -52,6 +53,8 @@ export function AnswerQuizForm({quiz}:Props){
             defaultValues:answer
         }
     )
+
+    const [showHint,setShowHint] = useState<boolean>(false)
 
     const  toggleChoiceIsCorrect = (index:number) =>{
         reset(
@@ -120,11 +123,17 @@ export function AnswerQuizForm({quiz}:Props){
             noValidate
             >
                 <Card className="max-w-5xl mx-auto mt-6 shadow-lg">
-                    <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success" hidden={getValues().answerStatus !== "ANSWER_CORRECT"}>
+                    <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success" hidden={getValues().answerStatus !== "ANSWER_CORRECT"}
+                    sx={{ whiteSpace: 'pre-line' }}
+                    >
                         正解！おめでとうございます！
+                        {quiz.explanationText && `\n\n${quiz.explanationText}`}
                     </Alert>
-                    <Alert icon={<CancelIcon fontSize="inherit" />} severity="error" hidden={getValues().answerStatus !== "ANSWER_INNCORRECT"}>
+                    <Alert icon={<CancelIcon fontSize="inherit" />} severity="error" hidden={getValues().answerStatus !== "ANSWER_INNCORRECT"}
+                    sx={{ whiteSpace: 'pre-line' }}
+                    >
                         不正解です。残念。。。
+                        {quiz.explanationText && `\n\n${quiz.explanationText}`}
                     </Alert>
                     
                     <CardContent sx={{overflow:'auto',maxHeight:'screen'}}>
@@ -148,13 +157,37 @@ export function AnswerQuizForm({quiz}:Props){
 
                     {/* 回答 */}
                     <Box className="mt-4 text-right">
+                        
                         <Button
+                        className='mx-4'
+                        color='warning'
+                        variant="contained"
+                        size="large"
+                        onClick={() => setShowHint(prev => !prev)}
+                        hidden={!quiz.hintText?.trim()}
+                        >
+                        {showHint ? "ヒントを隠す" : "ヒントを見る"}
+                        </Button>
+
+
+                        <Button
+                        className='mr-2'
                         variant="contained"
                         size="large"
                         type="submit"
                         >
                         回答する
                         </Button>
+                        
+                        {
+                          showHint &&  <Box className="mt-3 text-left">
+                                <Divider />
+                                <Alert icon={<StarBorderIcon fontSize="inherit" />} severity="warning" sx={{ whiteSpace: 'pre-line' }}>
+                                ヒント：
+                                {`\n\n${quiz.hintText}`}
+                                </Alert>
+                            </Box> 
+                        }
                     </Box>
                     </CardContent>
                 </Card>

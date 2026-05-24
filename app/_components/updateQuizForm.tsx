@@ -311,6 +311,36 @@ export default function UpdateQuizForm({quiz}:Props){
                             </Card>
                         ))}
                         </Box>
+
+                        {/* ヒント */}
+                        <Box className="mt-3">
+                            <TextField
+                            fullWidth
+                            multiline
+                            minRows={3}
+                            maxRows={10}
+                            label="ヒント（任意）"
+                            {...register('hintText')}
+                            error={'hintText' in formState.errors}
+                            helperText={formState.errors.hintText?.message?.toString()}
+                            />
+                        </Box>
+
+                        
+                        {/* 解説 */}
+                        <Box className="mt-3">
+                            <TextField
+                            fullWidth
+                            multiline
+                            minRows={3}
+                            maxRows={10}
+                            label="解説（任意）"
+                            {...register('explanationText')}
+                            error={'explanationText' in formState.errors}
+                            helperText={formState.errors.explanationText?.message?.toString()}
+                            />
+                        </Box>
+
                     </Box>
 
                     {/* 更新 */}

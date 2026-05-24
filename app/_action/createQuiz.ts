@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 
 
 export async function createQuizAction(_prev:any,obj:QuizForCreate){
+    logger.info(obj,"サーバ上の内容")
 
     let result:CreateResult<Quiz>
 
